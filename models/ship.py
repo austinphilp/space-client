@@ -2,6 +2,7 @@ from time import sleep
 
 from models.base import BaseRemoteObject
 from models.components import (
+    Panel,
     ReactionWheel,
     Reactor,
     Sensor,
@@ -248,5 +249,6 @@ class Ship(BaseRemoteObject):
         "thrusters": Thruster,
         "reaction_wheels": ReactionWheel,
         "reactors": Reactor,
-        "sensors": Sensor
+        "sensors": Sensor,
+        "panels": Panel
     }
