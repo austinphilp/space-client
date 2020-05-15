@@ -28,6 +28,28 @@ class SetThrottleMixin(object):
         return super()._load_status_report(status_report)
 
 
+class SetFocusMixin(object):
+    @property
+    def WRITABLE_FIELDS(self):
+        return ['focus'] + getattr(super(), 'WRITABLE_FIELDS', [])
+
+    @property
+    def focus(self):
+        return self._focus
+
+    @focus.setter
+    def focus(self, value):
+        return self.set_focus(value)
+
+    def set_focus(self, focus):
+        res = set_focus(self.object_id, focus)
+        self._load_status_report()
+        return res
+
+    def _load_status_report(self, status_report=None):
+        return super()._load_status_report(status_report)
+
+
 class SetPowerMixin(object):
     @property
     def WRITABLE_FIELDS(self):
@@ -48,34 +70,19 @@ class SetPowerMixin(object):
         return super()._load_status_report(status_report)
 
 
-class SetFocusMixin(object):
-    @property
-    def WRITABLE_FIELDS(self):
-        return ['focus'] + super().WRITABLE_FIELDS
-
-    @property
-    def focus(self):
-        return self._focus
-
-    @focus.setter
-    def focus(self, value):
-        return self.set_focus(value)
-
-    def set_focus(self, focus):
-        return set_focus(self.object_id, focus)
-
-    def _load_status_report(self, status_report=None):
-        return super()._load_status_report(status_report)
-
-
 class SetRotationMixin(object):
     @property
     def WRITABLE_FIELDS(self):
-        return ['pitch', 'yaw'] + super().WRITABLE_FIELDS
+        return [
+            'pitch_degrees',
+            'yaw_degrees',
+            'pitch_radians',
+            'yaw_radians',
+        ] + getattr(super(), 'WRITABLE_FIELDS', [])
 
     @property
     def pitch(self):
-        return self._pitch
+        return self._pitch_degrees
 
     @pitch.setter
     def pitch(self, value):
@@ -83,7 +90,7 @@ class SetRotationMixin(object):
 
     @property
     def yaw(self):
-        return self._yaw
+        return self._yaw_degrees
 
     @yaw.setter
     def yaw(self, value):
