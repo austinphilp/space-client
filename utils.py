@@ -79,10 +79,11 @@ def send_command(command_name, object_id, *args, port=None):
     )
     command_id = port.recv(8).decode().rstrip("\0")  # noqa
     payload_len = int(port.recv(8).decode().rstrip("\0"))
-    payload = b""
-    while payload_len > 0:
-        payload += port.recv(1024 if payload_len >= 1024 else payload_len)
-        payload_len -= 1024
+    payload = bytes()
+    buffer = b"INIT"
+    while len(buffer) > 0:
+        buffer = port.recv(1024)
+        payload += buffer
     port.close()
     return payload.decode()
 
