@@ -24,3 +24,8 @@ def set_focus(object_id, target_focus):
 def status_report(object_id=None):
     response = send_command('status_report', object_id=object_id)
     return json.loads(response)
+
+
+def sensor_ping(object_id):
+    response = send_command('sensor_ping', object_id=object_id)
+    return json.loads(response)
