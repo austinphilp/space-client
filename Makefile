@@ -6,12 +6,8 @@ venv:
 	pip3 install --user virtualenv
 	python3 -m virtualenv venv
 
-test:
-	make venv
-	venv/bin/python3 -m pytest space/tests
-
 flake8:
-	venv/bin/flake8 space/
+	venv/bin/flake8
 
 control: 
 	venv/bin/python3 -i control.py
