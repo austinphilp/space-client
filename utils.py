@@ -1,4 +1,3 @@
-import math
 import socket
 from time import time
 
@@ -78,7 +77,6 @@ def send_command(command_name, object_id, *args, port=None):
         + bytes(','.join(str(a) for a in args), "utf-8").ljust(224, b"\0")
     )
     command_id = port.recv(8).decode().rstrip("\0")  # noqa
-    payload_len = int(port.recv(8).decode().rstrip("\0"))
     payload = bytes()
     buffer = b"INIT"
     while len(buffer) > 0:
