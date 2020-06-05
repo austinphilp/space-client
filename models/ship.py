@@ -8,7 +8,7 @@ from models.components import (
     Sensor,
     Thruster
 )
-from utils import coord_equals, rotate_vector, thrust_vector
+from utils import rotate_vector, thrust_vector
 
 
 class Ship(BaseRemoteObject):
@@ -195,54 +195,6 @@ class Ship(BaseRemoteObject):
             )
             self.apply_thrust_for_vector(antivector, anti=False)
             sleep(0.001)
-        self.kill_throttle()
-
-    def kill_velocity_old(self):
-        while not coord_equals(self.vector, {'x': 0, 'y': 0, 'z': 0}):
-            # X Axis (Forward/Aft)
-            if self.vector['x'] < 0:
-                self.get_thruster("forward").throttle = (
-                    min(1, -self.vector['x']/10)
-                )
-                self.get_thruster("aft").throttle = 0
-            elif self.vector['x'] > 0:
-                self.get_thruster("forward").throttle = 0
-                self.get_thruster("aft").throttle = (
-                    min(1, self.vector['x']/10)
-                )
-                self.get_thruster("forward").throttle = 0
-            elif round(self.vector['x'], 2) == 0.00:
-                self.get_thruster("forward").throttle = 0
-                self.get_thruster("aft").throttle = 0
-            # Y Axis (Forward/Aft)
-            if self.vector['y'] > 0:
-                self.get_thruster("starboard").throttle = 0
-                self.get_thruster("port").throttle = (
-                    min(1, self.vector['y']/10)
-                )
-            elif self.vector['y'] < 0:
-                self.get_thruster("starboard").throttle = (
-                    min(1, -self.vector['y']/10)
-                )
-                self.get_thruster("port").throttle = 0
-            elif round(self.vector['y'], 2) == 0.00:
-                self.get_thruster("port").throttle = 0
-                self.get_thruster("starboard").throttle = 0
-            # Z Axis (Overhead/Deck)
-            if self.vector['z'] > 0:
-                self.get_thruster("overhead").throttle = 0
-                self.get_thruster("deck").throttle = (
-                    min(1, self.vector['z']/10)
-                )
-            elif self.vector['z'] < 0:
-                self.get_thruster("overhead").throttle = (
-                    min(1, -self.vector['z']/10)
-                )
-                self.get_thruster("deck").throttle = 0
-            elif round(self.vector['z'], 2) == 0.00:
-                self.get_thruster("deck").throttle = 0
-                self.get_thruster("overhead").throttle = 0
-            sleep(0.01)
         self.kill_throttle()
 
     COMPLEX_ATTRIBUTES = {
