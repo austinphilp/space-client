@@ -1,11 +1,15 @@
 from os import path
 
-import commands
+from client import SwarmServerClient
 from models.ship import Ship
 
 
 ROOT_DIR = path.dirname(path.abspath(__file__))
 
 if __name__ == "__main__":
-    system = commands.status_report()
-    ship = Ship(status_report=system['ships'][0])
+    client = SwarmServerClient()
+    ships = client.list_ships()
+    if len(ships) == 0:
+        print("No ships found")
+        exit(1)
+    ship = Ship(client.get_ship(ships[0].id))

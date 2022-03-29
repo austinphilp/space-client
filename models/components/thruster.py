@@ -1,7 +1,9 @@
-from models.base import BaseRemoteObject
-from mixins import SetThrottleMixin, SetPowerMixin
+class Thruster(object):
+    def __init__(self, thottleProto):
+        self.mass = thottleProto.mass
+        self.max_force = thottleProto.max_force
+        self.integrity = thottleProto.integrity
+        self.max_integrity = thottleProto.max_integrity
 
-
-class Thruster(BaseRemoteObject, SetThrottleMixin, SetPowerMixin):
-    def __repr__(self):
-        return F"<Thruster {self.direction} {self.throttle}>"
+    def __repr__(self, thottleProto):
+        return "<Thruster>"

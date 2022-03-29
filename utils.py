@@ -1,4 +1,3 @@
-import socket
 from time import time
 
 from vectors import Vector
@@ -9,6 +8,14 @@ def inv_vector(vector):
         -vector.x,
         -vector.y,
         -vector.z,
+    )
+
+
+def vector_from_proto(vector):
+    return Vector(
+        vector.x,
+        vector.y,
+        vector.z,
     )
 
 
@@ -26,19 +33,6 @@ def thrust_vector(vector):
     else:
         vector.z = max(vector.z, -1)
     return vector
-
-
-def rotate_vector(vec, orientation, anti=False):
-    # Rotate by Roll
-    roll = orientation['roll_radians']
-    yaw = orientation['yaw_radians']
-    pitch = orientation['pitch_radians']
-    vec = round_point(vec.rotate(-roll if anti else roll, (1, 0, 0)))
-    # Rotate by Pitch
-    vec = round_point(vec.rotate(-pitch if anti else pitch, (0, 1, 0)))
-    # Rotate by Yaw
-    vec = round_point(vec.rotate(-yaw if anti else yaw, (0, 0, 1)))
-    return vec
 
 
 def deg_to_rad(deg):
@@ -62,28 +56,6 @@ def coord_equals(coord_1, coord_2):
         and round(coord_1['y'], 3) == round(coord_2['y'], 3)
         and round(coord_1['z'], 3) == round(coord_2['z'], 3)
     )
-
-
-def send_command(command_name, object_id, *args, port=None):
-    # TODO(Austin) - Refactor to send multiple commands over a single
-    # connection
-    if port is None:
-        port = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-        port.connect("/home/austin/uds_socket")
-    port.send(
-        # TODO(Austin) - Dynamically decide system decoding
-        bytes(object_id or "", "utf-8").ljust(8, b"\0")
-        + bytes(command_name, "utf-8").ljust(24, b"\0")
-        + bytes(','.join(str(a) for a in args), "utf-8").ljust(224, b"\0")
-    )
-    command_id = port.recv(8).decode().rstrip("\0")  # noqa
-    payload = bytes()
-    buffer = b"INIT"
-    while len(buffer) > 0:
-        buffer = port.recv(1024)
-        payload += buffer
-    port.close()
-    return payload.decode()
 
 
 class throttle(object):
