@@ -34,6 +34,16 @@ class ShipServiceStub(object):
                 request_serializer=ship_dot_v1_dot_ship__pb2.SensorPingRequest.SerializeToString,
                 response_deserializer=ship_dot_v1_dot_ship__pb2.PingSummary.FromString,
                 )
+        self.Stow = channel.unary_unary(
+                '/ship.v1.ShipService/Stow',
+                request_serializer=ship_dot_v1_dot_ship__pb2.StowRequest.SerializeToString,
+                response_deserializer=ship_dot_v1_dot_ship__pb2.StowResponse.FromString,
+                )
+        self.QueueManufacturingJob = channel.unary_unary(
+                '/ship.v1.ShipService/QueueManufacturingJob',
+                request_serializer=ship_dot_v1_dot_ship__pb2.ManufacturingOrder.SerializeToString,
+                response_deserializer=ship_dot_v1_dot_ship__pb2.ManufacturingOrderResponse.FromString,
+                )
 
 
 class ShipServiceServicer(object):
@@ -63,6 +73,18 @@ class ShipServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def Stow(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def QueueManufacturingJob(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ShipServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -85,6 +107,16 @@ def add_ShipServiceServicer_to_server(servicer, server):
                     servicer.SensorPing,
                     request_deserializer=ship_dot_v1_dot_ship__pb2.SensorPingRequest.FromString,
                     response_serializer=ship_dot_v1_dot_ship__pb2.PingSummary.SerializeToString,
+            ),
+            'Stow': grpc.unary_unary_rpc_method_handler(
+                    servicer.Stow,
+                    request_deserializer=ship_dot_v1_dot_ship__pb2.StowRequest.FromString,
+                    response_serializer=ship_dot_v1_dot_ship__pb2.StowResponse.SerializeToString,
+            ),
+            'QueueManufacturingJob': grpc.unary_unary_rpc_method_handler(
+                    servicer.QueueManufacturingJob,
+                    request_deserializer=ship_dot_v1_dot_ship__pb2.ManufacturingOrder.FromString,
+                    response_serializer=ship_dot_v1_dot_ship__pb2.ManufacturingOrderResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -161,5 +193,39 @@ class ShipService(object):
         return grpc.experimental.unary_unary(request, target, '/ship.v1.ShipService/SensorPing',
             ship_dot_v1_dot_ship__pb2.SensorPingRequest.SerializeToString,
             ship_dot_v1_dot_ship__pb2.PingSummary.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def Stow(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ship.v1.ShipService/Stow',
+            ship_dot_v1_dot_ship__pb2.StowRequest.SerializeToString,
+            ship_dot_v1_dot_ship__pb2.StowResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def QueueManufacturingJob(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ship.v1.ShipService/QueueManufacturingJob',
+            ship_dot_v1_dot_ship__pb2.ManufacturingOrder.SerializeToString,
+            ship_dot_v1_dot_ship__pb2.ManufacturingOrderResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

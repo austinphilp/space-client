@@ -19,6 +19,10 @@ def vector_from_proto(vector):
     )
 
 
+def print_vector(vector):
+    return f"({vector.x:.2f}, {vector.y:.2f}, {vector.z:.2f})"
+
+
 def thrust_vector(vector):
     if vector.x >= 0:
         vector.x = min(vector.x, 1)

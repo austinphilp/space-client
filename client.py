@@ -1,18 +1,20 @@
 import grpc
 
-from proto.ship.v1.ship_pb2_grpc import ShipServiceStub
-from proto.ship.v1.ship_pb2 import (
+from models.components.sensor import PingSummary
+from ship.v1.ship_pb2_grpc import ShipServiceStub
+from ship.v1.ship_pb2 import (
     GetShipRequest,
     MoveToRequest,
     Empty,
-    SensorPingRequest
+    SensorPingRequest,
+    StowRequest,
 )
-from proto.util.v1.util_pb2 import Vector
+from util.v1.util_pb2 import Vector
 
 
 class SwarmServerClient(object):
     def __init__(self):
-        self._channel = grpc.insecure_channel('localhost:50051')
+        self._channel = grpc.insecure_channel('localhost:8000')
         self.ship_stub = ShipServiceStub(self._channel)
 
     def list_ships(self):
@@ -22,12 +24,17 @@ class SwarmServerClient(object):
         return self.ship_stub.GetShip(GetShipRequest(ship_id=ship_id))
 
     def move_to(self, ship_id, position):
-        return self.ship_stub.MoveTo(
+        return self.ship_stub.MoveTo.future(
             MoveToRequest(ship_id=ship_id,
-                          position=Vector(
+                          target_position=Vector(
                               x=position.x,
                               y=position.y,
                               z=position.z)))
 
     def sensor_ping(self, ship_id):
-        return self.ship_stub.SensorPing(SensorPingRequest(ship_id=ship_id))
+        return PingSummary(
+            self.ship_stub.SensorPing(SensorPingRequest(ship_id=ship_id))
+        )
+
+    def stow(self, ship_id, target_id):
+        self.ship_stub.Stow(StowRequest(ship_id=ship_id, target_id=target_id))
